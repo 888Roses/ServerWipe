@@ -50,7 +50,7 @@ public interface AbilityHolder {
 
         return getAbility(index)
                 .map(ability -> {
-                    abilityHandlers()[index].handle(ability);
+                    Optional.ofNullable(abilityHandlers()[index]).ifPresent(x -> x.handle(ability));
                     return true;
                 })
                 .orElse(false);
