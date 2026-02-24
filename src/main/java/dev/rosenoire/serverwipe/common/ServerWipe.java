@@ -1,9 +1,6 @@
 package dev.rosenoire.serverwipe.common;
 
-import dev.rosenoire.serverwipe.common.index.ModRegistries;
-import dev.rosenoire.serverwipe.common.index.ModRegistryKeys;
-import dev.rosenoire.serverwipe.common.index.ModRoles;
-import dev.rosenoire.serverwipe.common.index.ModTags;
+import dev.rosenoire.serverwipe.common.index.*;
 import net.collectively.geode.Geode;
 import net.fabricmc.api.ModInitializer;
 
@@ -18,6 +15,8 @@ public class ServerWipe implements ModInitializer {
 
         ModTags.register();
         ModRoles.register();
+
+        ModCommands.register();
 
         geode.register();
     }
