@@ -15,6 +15,6 @@ public record Ability() {
     }
 
     public Identifier iconTexture() {
-        return geode.id("textures/gui/sprites/ability/" + identifier().getPath() + ".png");
+        return geode.id("ability/" + identifier().getPath());
     }
 }

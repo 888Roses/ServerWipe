@@ -11,7 +11,7 @@ public interface ModRoles {
     Role.Builder<SteveSurvivor> STEVE = register(
             "steve",
             Role.builder(SteveSurvivor::new)
-                    .withAbility(ModAbilities.ATTACK)
+                    .withAbility(ModAbilities.STEVE_SWORD)
     );
 
     static void register() {}

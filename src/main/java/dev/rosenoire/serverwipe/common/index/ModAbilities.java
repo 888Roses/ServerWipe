@@ -6,7 +6,7 @@ import net.minecraft.registry.Registry;
 import static dev.rosenoire.serverwipe.common.ServerWipe.geode;
 
 public interface ModAbilities {
-    Ability ATTACK = register("attack", new Ability());
+    Ability STEVE_SWORD = register("steve_sword", new Ability());
 
     static void register() {}
 

@@ -12,7 +12,7 @@ import net.minecraft.util.Identifier;
 public class SteveSurvivor extends SurvivorRole {
     public SteveSurvivor(RoleHolderComponent roleHolder, Identifier identifier, Ability[] abilities) {
         super(roleHolder, identifier, abilities);
-        registerAbilityHandler(ModAbilities.ATTACK, this::handleAttackAbility);
+        registerAbilityHandler(ModAbilities.STEVE_SWORD, this::handleAttackAbility);
     }
 
     @Override
