@@ -7,6 +7,7 @@ import com.mojang.brigadier.suggestion.SuggestionProvider;
 import dev.rosenoire.serverwipe.cca.RoleHolderComponent;
 import dev.rosenoire.serverwipe.common.index.ModEntityComponents;
 import dev.rosenoire.serverwipe.common.index.ModRegistries;
+import dev.rosenoire.serverwipe.foundation.role.Role;
 import dev.rosenoire.serverwipe.foundation.role.Roles;
 import net.minecraft.command.CommandRegistryAccess;
 import net.minecraft.command.CommandSource;
@@ -14,11 +15,15 @@ import net.minecraft.command.argument.EntityArgumentType;
 import net.minecraft.command.argument.IdentifierArgumentType;
 import net.minecraft.command.suggestion.SuggestionProviders;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.nbt.NbtHelper;
+import net.minecraft.nbt.visitor.NbtTextFormatter;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
+import net.minecraft.storage.NbtWriteView;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
+import net.minecraft.util.ErrorReporter;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 
@@ -56,9 +61,38 @@ public class RoleCommand {
                                         .argument(PLAYER, EntityArgumentType.player())
                                         .executes(RoleCommand::remove)
                                 )
+                        ).then(CommandManager
+                                .literal("get").then(CommandManager
+                                        .argument(PLAYER, EntityArgumentType.player())
+                                        .executes(RoleCommand::get)
+                                )
                         )
                 )
         );
+    }
+
+    private static int get(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
+        PlayerEntity player = EntityArgumentType.getPlayer(context, PLAYER);
+        RoleHolderComponent component = player.getComponent(ModEntityComponents.ROLE_HOLDER);
+
+        if (component.role().isEmpty()) {
+            context.getSource().sendMessage(Text.literal("Role for " + player.getStringifiedName() + ": null"));
+            return 0;
+        }
+
+        Role role = component.role().get();
+
+        MutableText messageText = Text.literal(player.getStringifiedName());
+        messageText.append(" has role \"");
+        messageText.append(Text.literal(role.identifier().toString()).formatted(Formatting.AQUA));
+        messageText.append("\": ");
+
+        NbtWriteView writeView = NbtWriteView.create(ErrorReporter.EMPTY);
+        role.writeData(writeView);
+        messageText.append(NbtHelper.toPrettyPrintedText(writeView.getNbt()));
+
+        context.getSource().sendMessage(messageText);
+        return 1;
     }
 
     private static int remove(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
