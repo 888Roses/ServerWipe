@@ -1,32 +1,29 @@
 package dev.rosenoire.serverwipe.common.roles.survivor;
 
 import dev.rosenoire.serverwipe.cca.RoleHolderComponent;
+import dev.rosenoire.serverwipe.common.index.ModAbilities;
+import dev.rosenoire.serverwipe.foundation.ability.Ability;
 import dev.rosenoire.serverwipe.foundation.role.SurvivorRole;
 import net.minecraft.storage.ReadView;
 import net.minecraft.storage.WriteView;
+import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
 public class SteveSurvivor extends SurvivorRole {
-    private String message = "Hello, World!";
-
-    public SteveSurvivor(RoleHolderComponent roleHolder, Identifier identifier) {
-        super(roleHolder, identifier);
+    public SteveSurvivor(RoleHolderComponent roleHolder, Identifier identifier, Ability[] abilities) {
+        super(roleHolder, identifier, abilities);
+        registerAbilityHandler(ModAbilities.ATTACK, this::handleAttackAbility);
     }
 
     @Override
     public void writeData(WriteView writeView) {
-        writeView.putString("message", message);
     }
 
     @Override
     public void readData(ReadView readView) {
-        message = readView.getString("message", "Failed to load message!");
     }
 
-    @Override
-    public void tick(boolean isClient) {
-        if (player().isSneaking()) {
-            sync();
-        }
+    private void handleAttackAbility(Ability ability) {
+        player().sendMessage(Text.literal("Attacked!"), false);
     }
 }

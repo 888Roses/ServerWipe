@@ -8,7 +8,11 @@ import net.minecraft.util.Identifier;
 import static dev.rosenoire.serverwipe.common.ServerWipe.geode;
 
 public interface ModRoles {
-    Role.Builder<SteveSurvivor> STEVE = register("steve", Role.builder(SteveSurvivor::new));
+    Role.Builder<SteveSurvivor> STEVE = register(
+            "steve",
+            Role.builder(SteveSurvivor::new)
+                    .withAbility(ModAbilities.ATTACK)
+    );
 
     static void register() {}
 

@@ -14,6 +14,7 @@ public class ServerWipe implements ModInitializer {
         ModRegistries.register();
 
         ModTags.register();
+        ModAbilities.register();
         ModRoles.register();
 
         ModCommands.register();
