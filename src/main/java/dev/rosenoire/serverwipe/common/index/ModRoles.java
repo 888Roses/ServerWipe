@@ -8,12 +8,12 @@ import net.minecraft.util.Identifier;
 import static dev.rosenoire.serverwipe.common.ServerWipe.geode;
 
 public interface ModRoles {
-    Role.Builder<SteveSurvivor> STEVE = register("steve", SteveSurvivor::new);
+    Role.Builder<SteveSurvivor> STEVE = register("steve", Role.builder(SteveSurvivor::new));
 
     static void register() {}
 
-    static <T extends Role> Role.Builder<T> register(String name, Role.Builder<T> role) {
+    static <T extends Role> Role.Builder<T> register(String name, Role.Builder<T> builder) {
         Identifier identifier = geode.id(name);
-        return Registry.register(ModRegistries.ROLES, identifier, role);
+        return Registry.register(ModRegistries.ROLES, identifier, builder.withIdentifier(identifier));
     }
 }

@@ -2,7 +2,6 @@ package dev.rosenoire.serverwipe.cca;
 
 import dev.rosenoire.serverwipe.api.cca.components.PlayerComponent;
 import dev.rosenoire.serverwipe.common.index.ModEntityComponents;
-import dev.rosenoire.serverwipe.common.index.ModRoles;
 import dev.rosenoire.serverwipe.foundation.role.Role;
 import dev.rosenoire.serverwipe.foundation.role.Roles;
 import net.minecraft.entity.player.PlayerEntity;
@@ -68,7 +67,7 @@ public class RoleHolderComponent extends PlayerComponent implements CommonTickin
                 return;
             }
 
-            this.role = potentialRole.get().build(this, Roles.getIdentifier(potentialRole.get()));
+            this.role = potentialRole.get().construct(this);
             this.role.readData(roleView.getReadView(roleName));
         }
     }
@@ -84,7 +83,7 @@ public class RoleHolderComponent extends PlayerComponent implements CommonTickin
 
     //region control
     public <T extends Role> void setRole(@NotNull Role.Builder<T> role) {
-        this.role = role.build(this, Roles.getIdentifier(role));
+        this.role = role.construct(this);
         sync();
     }
 

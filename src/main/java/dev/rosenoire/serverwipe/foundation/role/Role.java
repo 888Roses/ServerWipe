@@ -7,6 +7,8 @@ import net.minecraft.storage.WriteView;
 import net.minecraft.util.Identifier;
 import net.minecraft.world.World;
 
+import java.util.function.BiFunction;
+
 public abstract class Role {
     private final RoleHolderComponent roleHolder;
     private final Identifier identifier;
@@ -30,6 +32,9 @@ public abstract class Role {
     public final RoleHolderComponent roleHolder() {return this.roleHolder;}
     public final PlayerEntity player() {return roleHolder().player;}
     public final World world() {return player().getEntityWorld();}
+    public String translationKey() {
+        return this.identifier.toTranslationKey("role");
+    }
     //endregion
 
     //region control
@@ -37,9 +42,30 @@ public abstract class Role {
     //endregion
 
     //region building
-    @FunctionalInterface
-    public interface Builder<T extends Role> {
-        T build(RoleHolderComponent component, Identifier identifier);
+    public static <T extends Role> Builder<T> builder(BiFunction<RoleHolderComponent, Identifier, T> constructor) {
+        return new Builder<>(constructor);
+    }
+
+    public static final class Builder<T extends Role> {
+        private final BiFunction<RoleHolderComponent, Identifier, T> constructor;
+        private Identifier identifier;
+
+        private Builder(BiFunction<RoleHolderComponent, Identifier, T> constructor) {
+            this.constructor = constructor;
+        }
+
+        public T construct(RoleHolderComponent component) {
+            return constructor.apply(component, identifier);
+        }
+
+        public Builder<T> withIdentifier(Identifier identifier) {
+            this.identifier = identifier;
+            return this;
+        }
+
+        public String translationKey() {
+            return this.identifier.toTranslationKey("role");
+        }
     }
     //endregion
 }
