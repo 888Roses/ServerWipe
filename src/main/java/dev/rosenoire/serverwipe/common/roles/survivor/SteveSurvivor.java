@@ -1,5 +1,7 @@
 package dev.rosenoire.serverwipe.common.roles.survivor;
 
+import dev.rosenoire.serverwipe.api.cooldowns.PlayerCooldowns;
+import dev.rosenoire.serverwipe.cca.CooldownInfo;
 import dev.rosenoire.serverwipe.cca.RoleHolderComponent;
 import dev.rosenoire.serverwipe.common.index.ModAbilities;
 import dev.rosenoire.serverwipe.foundation.ability.Ability;
@@ -24,6 +26,11 @@ public class SteveSurvivor extends SurvivorRole {
     }
 
     private void handleAttackAbility(Ability ability) {
+        if (ability.isOnCooldown(player())) {
+            return;
+        }
+
         player().sendMessage(Text.literal("Attacked!"), false);
+        ability.cooldown(player(), 20);
     }
 }

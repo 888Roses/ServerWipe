@@ -28,7 +28,8 @@
   ],
   "custom": {
     "cardinal-components": [
-      "server_wipe:role_holder"
+      "server_wipe:role_holder",
+      "server_wipe:player_cooldowns"
     ]
   },
   "depends": {

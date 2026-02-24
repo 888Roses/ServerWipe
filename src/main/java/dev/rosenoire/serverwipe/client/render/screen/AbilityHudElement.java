@@ -1,10 +1,13 @@
 package dev.rosenoire.serverwipe.client.render.screen;
 
 import dev.rosenoire.serverwipe.api.client.render.PlayerHudElement;
+import dev.rosenoire.serverwipe.api.cooldowns.PlayerCooldowns;
+import dev.rosenoire.serverwipe.cca.CooldownInfo;
 import dev.rosenoire.serverwipe.cca.RoleHolderComponent;
 import dev.rosenoire.serverwipe.common.index.ModEntityComponents;
 import dev.rosenoire.serverwipe.foundation.ability.Ability;
 import dev.rosenoire.serverwipe.foundation.role.Role;
+import net.collectively.geode.math.math;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gl.RenderPipelines;
@@ -44,13 +47,20 @@ public class AbilityHudElement extends PlayerHudElement {
                 continue;
             }
 
-            drawAbility(client, textRenderer, context, ability, i, x, y);
+            drawAbility(client, player, textRenderer, context, ability, i, x, y);
             x -= SIZE + 2;
         }
     }
 
-    private void drawAbility(MinecraftClient client, TextRenderer textRenderer, DrawContext context, Ability ability, int i, int x, int y) {
-        context.drawGuiTexture(RenderPipelines.GUI_TEXTURED, ability.iconTexture(), x, y, SIZE, SIZE);
+    private void drawAbility(MinecraftClient client, ClientPlayerEntity player, TextRenderer textRenderer, DrawContext context, Ability ability, int i, int x, int y) {
+        long currentTime = player.getEntityWorld().getTime();
+        double cooldownProgress = PlayerCooldowns.get(player, ability.identifier())
+                .map(info -> info.getProgress(currentTime))
+                .orElse(1d);
+        int height = math.clamp(math.round((float) cooldownProgress * SIZE), 0, SIZE);
+
+        context.drawGuiTexture(RenderPipelines.GUI_TEXTURED, ability.iconTexture(), x, y, SIZE, SIZE, 0xff222222);
+        context.drawGuiTexture(RenderPipelines.GUI_TEXTURED, ability.iconTexture(), SIZE, SIZE, 0, 0, x, y, SIZE, height, 0xffffffff);
 
         Text boundKey = Text.literal(getHotbarKeyTranslationKey(client, i));
         int width = textRenderer.getWidth(boundKey);
