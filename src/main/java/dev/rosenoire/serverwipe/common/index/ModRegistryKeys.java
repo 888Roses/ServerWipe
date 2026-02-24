@@ -1,5 +1,6 @@
 package dev.rosenoire.serverwipe.common.index;
 
+import dev.rosenoire.serverwipe.foundation.ability.Ability;
 import dev.rosenoire.serverwipe.foundation.role.Role;
 import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKey;
@@ -8,6 +9,7 @@ import static dev.rosenoire.serverwipe.common.ServerWipe.geode;
 
 public interface ModRegistryKeys {
     RegistryKey<Registry<Role.Builder<? extends Role>>> ROLES = of("role");
+    RegistryKey<Registry<Ability>> ABILITIES = of("ability");
 
     static void register() {}
 
