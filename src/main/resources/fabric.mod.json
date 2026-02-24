@@ -18,11 +18,19 @@
     ],
     "main": [
       "dev.rosenoire.serverwipe.common.ServerWipe"
+    ],
+    "cardinal-components-entity": [
+      "dev.rosenoire.serverwipe.common.index.ModEntityComponents"
     ]
   },
   "mixins": [
     "server_wipe.mixins.json"
   ],
+  "custom": {
+    "cardinal-components": [
+      "server_wipe:role_holder"
+    ]
+  },
   "depends": {
     "fabricloader": ">=${loader_version}",
     "fabric-api": "*",
