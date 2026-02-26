@@ -17,6 +17,9 @@ public class ServerWipe implements ModInitializer {
         ModAbilities.register();
         ModRoles.register();
 
+        ModEntityTypes.register();
+
+
         ModCommands.register();
 
         geode.register();

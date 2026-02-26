@@ -1,5 +1,6 @@
 package dev.rosenoire.serverwipe.client;
 
+import dev.rosenoire.serverwipe.client.index.ModEntityRenderers;
 import dev.rosenoire.serverwipe.client.index.ModHudElements;
 import dev.rosenoire.serverwipe.common.ServerWipe;
 import net.collectively.geode.GeodeClient;
@@ -11,6 +12,8 @@ public class ServerWipeClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
         ModHudElements.register();
+        ModEntityRenderers.register();
+
         geode.register();
     }
 }
