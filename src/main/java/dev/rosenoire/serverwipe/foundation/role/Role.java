@@ -75,12 +75,20 @@ public abstract class Role implements AbilityHolder {
         return abilityHandlers;
     }
 
-    public BakedRoleModel bakedRoleModel() {return bakedRoleModel;}
+    public BakedRoleModel bakedRoleModel() {
+        return bakedRoleModel;
+    }
     //endregion
 
     //region control
     public final void sync() {
         roleHolder().sync();
+    }
+    //endregion
+
+    //region params
+    public boolean canJump() {
+        return false;
     }
     //endregion
 
@@ -102,7 +110,7 @@ public abstract class Role implements AbilityHolder {
         private Identifier baseModelName;
         private Identifier baseAnimationName;
         private Identifier baseTextureName;
-       private MovementAnimations movementAnimations;
+        private MovementAnimations movementAnimations;
 
         private Builder(Constructor<T> constructor) {
             this.constructor = constructor;
