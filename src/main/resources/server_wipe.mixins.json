@@ -4,6 +4,7 @@
   "package": "dev.rosenoire.serverwipe.mixin",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
+    "InGameHudMixin"
   ],
   "client": [
     "ClientPlayerEntityMixin",
