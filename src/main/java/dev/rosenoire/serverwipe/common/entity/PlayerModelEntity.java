@@ -45,6 +45,8 @@ public class PlayerModelEntity extends AbstractGenericEntity implements GeoEntit
     public boolean wasSprinting;
     public boolean isGrounded;
     public boolean wasGrounded;
+    public boolean isMoving;
+    public boolean wasMoving;
     public double fallDistance;
     public double lastFallDistance;
 
@@ -153,16 +155,15 @@ public class PlayerModelEntity extends AbstractGenericEntity implements GeoEntit
         lastFallDistance = fallDistance;
         fallDistance = player.fallDistance;
 
+        wasMoving = isMoving;
+        isMoving = playerPosition.sub(lastPlayerPosition).squaredHorMag() > 0.01;
+
         setPosition(playerPosition.toVec3d());
         setRotation((float) playerRotation.x(), (float) playerRotation.y());
     }
     //endregion
 
     //region access
-    public boolean isMoving() {
-        return playerPosition.sub(lastPlayerPosition).squaredHorMag() > 0.01;
-    }
-
     public Optional<RoleHolderComponent> roleHolder() {
         return Optional.ofNullable(player).map(player -> player.getComponent(ModEntityComponents.ROLE_HOLDER));
     }
@@ -195,8 +196,12 @@ public class PlayerModelEntity extends AbstractGenericEntity implements GeoEntit
         }
 
         private PlayState handleWithRole(@NonNull AnimationTest<PlayerModelEntity> animation, PlayerModelEntity playerModel, RoleHolderComponent component, Role role) {
-            boolean isMoving = playerModel.isMoving();
+            boolean isMoving = playerModel.isMoving;
+            boolean wasMoving = playerModel.wasMoving;
+
             boolean isSprinting = playerModel.isSprinting;
+            boolean wasSprinting = playerModel.wasSprinting;
+
             boolean wasFalling = !playerModel.wasGrounded;
             boolean isFalling = !playerModel.isGrounded;
 
@@ -245,6 +250,22 @@ public class PlayerModelEntity extends AbstractGenericEntity implements GeoEntit
                         .then(movementAnimations.startWalk(), LoopType.HOLD_ON_LAST_FRAME)
                         .thenLoop(movementAnimations.walk())
                 );
+            }
+
+            if (animation.isCurrentAnimationStage(movementAnimations.exitRun()) || animation.isCurrentAnimationStage(movementAnimations.exitWalk())) {
+                return PlayState.CONTINUE;
+            }
+
+            if (wasMoving) {
+                RawAnimation anim = RawAnimation.begin();
+
+                if (wasSprinting) {
+                    anim.thenPlayAndHold(movementAnimations.exitRun());
+                } else {
+                    anim.thenPlayAndHold(movementAnimations.exitWalk());
+                }
+
+                return animation.setAndContinue(anim.thenLoop(movementAnimations.idle()));
             }
 
             return animation.setAndContinue(RawAnimation.begin().thenLoop(movementAnimations.idle()));
